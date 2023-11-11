@@ -1,0 +1,11 @@
+{% extends "base.html"%}
+{% block title %}Review Page{% endblock %}
+
+{% block content %}
+<form action="/" method="POST">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input id="username" name="username" type="text">
+    <button type="submit">Send</button>
+</form>
+{% endblock %}
