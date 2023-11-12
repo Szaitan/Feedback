@@ -1,10 +1,21 @@
 {% extends "base.html"%}
+{% load static %}
 {% block title %}Review Page{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'reviews/styles.css' %}">
+{% endblock %}
 
 {% block content %}
 <form action="/" method="POST">
     {% csrf_token %}
-    {{ form }}
+    {% for field in form %}
+        <div class="form-control {% if field.errors %}errors{% endif %}">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+        </div>
+    {% endfor %}
     <button type="submit">Send</button>
 </form>
 {% endblock %}

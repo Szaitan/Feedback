@@ -11,8 +11,11 @@ def index(request):
             entered_name = form.cleaned_data
             print(entered_name["username"])
             return redirect('thank_you_page')
-    form = ReviewForm()
+    else:
+        form = ReviewForm()
     return render(request, 'reviews/review.html', {'form': form})
+    # Cała konstrukcja powyżej opiera się na form.
+    # Jeśli jest to POST ale nie jest valid to zostaje ta forma przekazana a nie pusta.
 
 
 def thank_you(request):
