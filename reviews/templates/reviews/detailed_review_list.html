@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Review List = {{ context.id }}{% endblock %}
+
+{% block content %}
+    <h1>{{ data.username }}</h1>
+    <h2>{{ data.rating }}</h2>
+    <h3>{{ data.review_text }}</h3>
+{% endblock %}
