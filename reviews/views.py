@@ -87,6 +87,6 @@ class DetailedReviewListView(TemplateView):
 #         data = Review.objects.get(id=data_id)
 #         print(data)
 #         return render(request, "reviews/detailed_review_list.html", {
-#             "context": data,
+#             "data": data,
 #         })
 #
