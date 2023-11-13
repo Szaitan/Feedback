@@ -41,5 +41,6 @@ class ReviewView(View):
 #     # Jeśli jest to POST ale nie jest valid to zostaje ta forma przekazana a nie pusta.
 
 
-def thank_you(request):
-    return render(request, "reviews/thank_you_page.html")
+class ThankYouView(View):
+    def get(self, request):
+        return render(request, "reviews/thank_you_page.html")
