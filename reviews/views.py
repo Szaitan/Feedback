@@ -3,9 +3,25 @@ from .forms import ReviewForm
 from .models import Review
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormView
+
+
 # Create your views here.
 
+# class ReviewView(FormView):
+#     form_class = ReviewForm
+#     template_name = "reviews/review.html"
+#     success_url = "/thank-you"
+#
+#     def form_valid(self, form):
+#         entered_data = form.cleaned_data
+#         object_to_save = Review(username=entered_data["username"], review_text=entered_data["review_text"],
+#                                 rating=entered_data["rating"]).save()
+#         return super().form_valid(form)
 
+
+# Podstawowa forma View klasy
 class ReviewView(View):
     def get(self, request):
         form = ReviewForm()
@@ -14,7 +30,7 @@ class ReviewView(View):
                                                        'data': data})
 
     def post(self, request):
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST) #Tutaj wsadzamy dane uzyskane w request.POST w celu ich walidacji
         if form.is_valid():
             # Wykorzystując ModelForm możemy użyć skróconej wersji zapisu w postaci:
             # form.save()
@@ -55,30 +71,31 @@ class ThankYouView(TemplateView):
         return context
 
 
-class ReviewListView(TemplateView):
+class ReviewListView(ListView):
     template_name = "reviews/review_list.html"
+    model = Review
+    context_object_name = "all_reviews"
+    # Normalnie gdy context_object_name nie jest ustalone, variable zawierajace dane to object_list
 
-    def get_context_data(self, **kwargs):
-        all_reviews = Review.objects.all()
-        context = super().get_context_data(**kwargs)
-        context["all_reviews"] = all_reviews
+    def get_queryset(self):
+        context = super().get_queryset()
+        context = context.filter(rating__gte=2)
         return context
 
 
-class DetailedReviewListView(TemplateView):
+class DetailedReviewListView(DetailView):
     template_name = "reviews/detailed_review_list.html"
+    model = Review
+    context_object_name = "data"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        print(kwargs['data_id'])
-        print(type(kwargs['data_id']))
-        print(type(Review.objects.get(id=kwargs['data_id'])))
-        xyz = Review.objects.get(id=kwargs['data_id'])
-        print(xyz.review_text)
-        context["data"] = xyz
-        # WAŻNE to co przekazujemy do html to dictionary !!! Więc aby dostać się do danych trzeba w temaplacie wezwać
-        # nazwę dictionary a nie context !!! W tym wypadku jest to "data" !!!
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     xyz = Review.objects.get(id=kwargs['data_id'])
+    #     context["data"] = xyz
+    #     # WAŻNE to co przekazujemy do html to dictionary !!! Więc aby dostać się do danych trzeba w temaplacie wezwać
+    #     # nazwę dictionary a nie context !!! W tym wypadku jest to "data" !!!
+    #     return context
+
 
 
 # class DetailedReviewListView(View):
