@@ -1,14 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import ProfileForm
+from .models import UserProfile
 
 # Create your views here.
-
-
-def store_file(file):
-    with open(f"temp/{file.name}", "wb+") as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
 
 
 class CreateProfileView(View):
@@ -20,8 +15,10 @@ class CreateProfileView(View):
 
     def post(self, request):
         form = ProfileForm(request.POST, request.FILES)
+        print(form.errors.as_data())
         if form.is_valid():
-            store_file(request.FILES["image"])
+            user = UserProfile(image=request.FILES["image"])
+            user.save()
             return redirect('/profiles')
         return redirect("/profiles", {
             'form': form
