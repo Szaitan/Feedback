@@ -3,6 +3,7 @@ from django.views import View
 from .forms import ProfileForm
 from .models import UserProfile
 
+
 # Create your views here.
 
 
@@ -22,3 +23,11 @@ class CreateProfileView(View):
             return redirect('/profiles')
         # Ważne !!! gdy for validate jest False trzeba użyć render a nie redirect aby widzieć uwagi
         return render(request, "profiles/create_profile.html", {'form': form})
+
+
+class UserProfiles(View):
+    def get(self, request):
+        list_w_users = UserProfile.objects.all()
+        return render(request, "profiles/user_profiles.html", {
+            "list_with_users": list_w_users
+        })

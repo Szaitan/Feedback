@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Users List{% endblock %}
+
+{% block content %}
+<ul>
+    {% for data in list_with_users %}
+    <li>
+        <img src="{{ data.image.url }}" alt="meine-image">
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
