@@ -15,11 +15,10 @@ class CreateProfileView(View):
 
     def post(self, request):
         form = ProfileForm(request.POST, request.FILES)
-        print(form.errors.as_data())
+
         if form.is_valid():
             user = UserProfile(image=request.FILES["image"])
             user.save()
             return redirect('/profiles')
-        return redirect("/profiles", {
-            'form': form
-        })
+        # Ważne !!! gdy for validate jest False trzeba użyć render a nie redirect aby widzieć uwagi
+        return render(request, "profiles/create_profile.html", {'form': form})
