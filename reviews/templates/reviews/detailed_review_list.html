@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Review List = {{ context.id }}{% endblock %}
+{% block title %}Review List = {{ data.id }}{% endblock %}
 
 {% block content %}
     <h1>{{ data.username }}</h1>
     <h2>{{ data.rating }}</h2>
     <h3>{{ data.review_text }}</h3>
+
+    {% if is_favorite %}
+        <h1>This is my favorite post!!!</h1>
+    {% else %}
+    <form action="/review/favorite" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="{{ data.id }}" name="review_id">
+        <button>Favorite</button>
+    </form>
+    {% endif %}
 {% endblock %}

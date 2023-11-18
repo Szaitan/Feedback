@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .forms import ReviewForm
 from .models import Review
 from django.views import View
@@ -83,10 +83,10 @@ class ReviewListView(ListView):
         return context
 
 
-class DetailedReviewListView(DetailView):
-    template_name = "reviews/detailed_review_list.html"
-    model = Review
-    context_object_name = "data"
+# class DetailedReviewListView(DetailView):
+#     template_name = "reviews/detailed_review_list.html"
+#     model = Review
+#     context_object_name = "data"
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -96,14 +96,25 @@ class DetailedReviewListView(DetailView):
     #     # nazwę dictionary a nie context !!! W tym wypadku jest to "data" !!!
     #     return context
 
+class AddFavoriteView(View):
+    def post(self, request):
+        review_id = request.POST["review_id"]
+        request.session["favorite_review"] = int(review_id)
+        return redirect(reverse("detailed_review_list_page", args=[review_id]))
 
 
-# class DetailedReviewListView(View):
-#     def get(self, request, data_id):
-#         print(data_id)
-#         data = Review.objects.get(id=data_id)
-#         print(data)
-#         return render(request, "reviews/detailed_review_list.html", {
-#             "data": data,
-#         })
-#
+class DetailedReviewListView(View):
+    def get(self, request, pk):
+        data = Review.objects.get(id=pk)
+
+        is_favorite = False
+        # print(f"data.id = {data.id } and request.session == {request.session['favorite_review']}")
+        if data.id == request.session.get("favorite_review"):
+            is_favorite = True
+
+        return render(request, "reviews/detailed_review_list.html", {
+            "data": data,
+            "is_favorite": is_favorite
+        })
+
+
