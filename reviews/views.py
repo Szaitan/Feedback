@@ -82,7 +82,6 @@ class ReviewListView(ListView):
         context = context.filter(rating__gte=2)
         return context
 
-
 # class DetailedReviewListView(DetailView):
 #     template_name = "reviews/detailed_review_list.html"
 #     model = Review
@@ -95,6 +94,7 @@ class ReviewListView(ListView):
     #     # WAŻNE to co przekazujemy do html to dictionary !!! Więc aby dostać się do danych trzeba w temaplacie wezwać
     #     # nazwę dictionary a nie context !!! W tym wypadku jest to "data" !!!
     #     return context
+
 
 class AddFavoriteView(View):
     def post(self, request):
